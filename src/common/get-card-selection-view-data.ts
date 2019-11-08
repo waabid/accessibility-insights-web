@@ -11,7 +11,6 @@ export interface CardSelectionViewData {
     highlightedResultUids: string[]; // page elements to highlight
     selectedResultUids: string[]; // indicates selected cards
     expandedRuleIds: string[];
-    visualHelperEnabled: boolean;
 }
 
 export type GetCardSelectionViewData = (storeData: CardSelectionStoreData) => CardSelectionViewData;
@@ -23,14 +22,7 @@ export const getCardSelectionViewData: GetCardSelectionViewData = (storeData: Ca
         return viewData;
     }
 
-    viewData.visualHelperEnabled = storeData.visualHelperEnabled || false;
-
     viewData.expandedRuleIds = getRuleIdsOfExpandedRules(storeData.rules);
-
-    if (!storeData.visualHelperEnabled) {
-        // no selected cards; no highlighted instances
-        return viewData;
-    }
 
     if (viewData.expandedRuleIds.length === 0) {
         viewData.highlightedResultUids = getAllResultUids(storeData.rules);
@@ -51,7 +43,6 @@ function getEmptyViewData(): CardSelectionViewData {
         highlightedResultUids: [],
         selectedResultUids: [],
         expandedRuleIds: [],
-        visualHelperEnabled: false,
     };
 
     return viewData;

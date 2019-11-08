@@ -52,7 +52,6 @@ describe('RuleBasedViewModelProvider', () => {
             expandedRuleIds: testScenario.isExpanded ? ['rule1'] : [],
             highlightedResultUids: testScenario.isHighlighted ? ['stub_uid'] : [],
             selectedResultUids: testScenario.isExpanded && testScenario.isSelected ? ['stub_uid'] : [],
-            visualHelperEnabled: true,
         };
 
         const actualResults: CardsViewModel = getCardViewData(rules, results, cardSelectionViewData);
