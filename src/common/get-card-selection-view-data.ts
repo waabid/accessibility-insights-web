@@ -1,6 +1,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { flatMap, forOwn, keys } from 'lodash';
+import { HighlightState } from 'common/components/cards/instance-details-footer';
+import {
+    PlatformData,
+    UnifiedResult,
+    ViewPortProperties,
+    UnifiedScanResultStoreData,
+} from 'common/types/store-data/unified-data-interface';
+import { BoundingRectangle } from 'electron/platform/android/scan-results';
+import { flatMap, forOwn, includes, keys } from 'lodash';
+
 import {
     CardSelectionStoreData,
     RuleExpandCollapseData,
@@ -12,41 +21,46 @@ export interface CardSelectionViewData {
     selectedResultUids: string[]; // indicates selected cards
     expandedRuleIds: string[];
     visualHelperEnabled: boolean;
+    resultHighlightStatus: { [resultId: string]: HighlightState };
 }
 
-export type GetCardSelectionViewData = (storeData: CardSelectionStoreData) => CardSelectionViewData;
+export type GetCardSelectionViewData = (
+    storeData: CardSelectionStoreData,
+    unifiedScanResultStoreData: UnifiedScanResultStoreData,
+) => CardSelectionViewData;
 
 export const getCardSelectionViewData: GetCardSelectionViewData = (
-    storeData: CardSelectionStoreData,
+    cardSelectionStoreData: CardSelectionStoreData,
+    unifiedScanResultStoreData: UnifiedScanResultStoreData,
 ): CardSelectionViewData => {
     const viewData = getEmptyViewData();
 
-    if (!storeData) {
+    if (!cardSelectionStoreData) {
         return viewData;
     }
 
-    viewData.visualHelperEnabled = storeData.visualHelperEnabled || false;
+    viewData.visualHelperEnabled = cardSelectionStoreData.visualHelperEnabled || false;
 
-    viewData.expandedRuleIds = getRuleIdsOfExpandedRules(storeData.rules);
+    viewData.expandedRuleIds = getRuleIdsOfExpandedRules(cardSelectionStoreData.rules);
 
-    if (!storeData.visualHelperEnabled) {
+    if (!cardSelectionStoreData.visualHelperEnabled) {
         // no selected cards; no highlighted instances
         return viewData;
     }
 
     if (viewData.expandedRuleIds.length === 0) {
-        viewData.highlightedResultUids = getAllResultUids(storeData.rules);
+        viewData.highlightedResultUids = getAllResultUids(cardSelectionStoreData.rules);
         return viewData;
     }
 
     viewData.selectedResultUids = getOnlyResultUidsFromSelectedCards(
-        storeData.rules,
+        cardSelectionStoreData.rules,
         viewData.expandedRuleIds,
     );
 
     viewData.highlightedResultUids = viewData.selectedResultUids.length
         ? viewData.selectedResultUids
-        : getAllResultUidsFromRuleIdArray(storeData.rules, viewData.expandedRuleIds);
+        : getAllResultUidsFromRuleIdArray(cardSelectionStoreData.rules, viewData.expandedRuleIds);
 
     return viewData;
 };
@@ -57,9 +71,39 @@ function getEmptyViewData(): CardSelectionViewData {
         selectedResultUids: [],
         expandedRuleIds: [],
         visualHelperEnabled: false,
+        resultHighlightStatus: {},
     };
 
     return viewData;
+}
+
+const getHighlightStatus = (
+    highlightedResultUids: string[],
+    resultUid: string,
+    result: UnifiedResult,
+    platformInfo: PlatformData,
+) => {
+    if (
+        !hasValidBoundingRectangle(result.descriptors.boundingRectangle, platformInfo.viewPortInfo)
+    ) {
+        return 'unavailable';
+    }
+
+    if (includes(highlightedResultUids, resultUid)) {
+        return 'visible';
+    }
+
+    return 'hidden';
+};
+
+function hasValidBoundingRectangle(
+    boundingRectangle: BoundingRectangle,
+    viewPort: ViewPortProperties,
+): boolean {
+    return (
+        boundingRectangle != null &&
+        !(boundingRectangle.left > viewPort.width || boundingRectangle.top > viewPort.height)
+    );
 }
 
 function getRuleIdsOfExpandedRules(ruleDictionary: RuleExpandCollapseDataDictionary): string[] {
