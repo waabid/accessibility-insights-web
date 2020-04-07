@@ -18,6 +18,7 @@ import { CardSelectionStore } from 'background/stores/card-selection-store';
 import { DetailsViewStore } from 'background/stores/details-view-store';
 import { UnifiedScanResultStore } from 'background/stores/unified-scan-result-store';
 import { UserConfigurationController } from 'background/user-configuration-controller';
+import { provideBlob } from 'common/blob-provider';
 import { onlyHighlightingSupported } from 'common/components/cards/card-interaction-support';
 import { ExpandCollapseVisualHelperModifierButtons } from 'common/components/cards/cards-visualization-modifier-buttons';
 import { CardsCollapsibleControl } from 'common/components/cards/collapsible-component-cards';
@@ -27,6 +28,7 @@ import { DateProvider } from 'common/date-provider';
 import { DocumentManipulator } from 'common/document-manipulator';
 import { DropdownClickHandler } from 'common/dropdown-click-handler';
 import { TelemetryEventSource } from 'common/extension-telemetry-events';
+import { FileURLProvider } from 'common/file-url-provider';
 import { getCardSelectionViewData } from 'common/get-card-selection-view-data';
 import { GetGuidanceTagsFromGuidanceLinks } from 'common/get-guidance-tags-from-guidance-links';
 import { createDefaultLogger } from 'common/logging/default-logger';
@@ -35,6 +37,7 @@ import { DropdownActionMessageCreator } from 'common/message-creators/dropdown-a
 import { UserConfigMessageCreator } from 'common/message-creators/user-config-message-creator';
 import { getCardViewData } from 'common/rule-based-view-model-provider';
 import { TelemetryDataFactory } from 'common/telemetry-data-factory';
+import { WindowUtils } from 'common/window-utils';
 import { DetailsViewActionMessageCreator } from 'DetailsView/actions/details-view-action-message-creator';
 import { CardsViewDeps } from 'DetailsView/components/cards-view';
 import { ipcRenderer, remote } from 'electron';
@@ -58,11 +61,18 @@ import { ScanController } from 'electron/platform/android/scan-controller';
 import { createDefaultBuilder } from 'electron/platform/android/unified-result-builder';
 import { UnifiedSettingsProvider } from 'electron/settings/unified-settings-provider';
 import { RootContainerState } from 'electron/views/root-container/components/root-container';
+import { UnifiedReportHead } from 'electron/views/unified-report-head';
 import { PlatformInfo } from 'electron/window-management/platform-info';
 import { WindowFrameListener } from 'electron/window-management/window-frame-listener';
 import { WindowFrameUpdater } from 'electron/window-management/window-frame-updater';
 import { loadTheme, setFocusVisibility } from 'office-ui-fabric-react';
 import * as ReactDOM from 'react-dom';
+import { AutomatedChecksReportSectionFactory } from 'reports/components/report-sections/automated-checks-report-section-factory';
+import { getDefaultAddListenerForCollapsibleSection } from 'reports/components/report-sections/collapsible-script-provider';
+import { ReactStaticRenderer } from 'reports/react-static-renderer';
+import { ReportGenerator } from 'reports/report-generator';
+import { ReportHtmlGenerator } from 'reports/report-html-generator';
+import { ReportNameGenerator } from 'reports/report-name-generator';
 
 import { UserConfigurationActions } from '../../background/actions/user-configuration-actions';
 import { getPersistedData, PersistedData } from '../../background/get-persisted-data';
@@ -316,6 +326,18 @@ getPersistedData(indexedDBInstance, indexedDBDataKeysToFetch).then(
 
         const documentManipulator = new DocumentManipulator(document);
 
+        const reportHtmlGenerator = new ReportHtmlGenerator(
+            AutomatedChecksReportSectionFactory,
+            new ReactStaticRenderer(),
+            { extensionVersion: '1.1', browserSpec: 'doesnt exist', axeCoreVersion: '0.16' },
+            getDefaultAddListenerForCollapsibleSection,
+            DateProvider.getUTCStringFromDate,
+            GetGuidanceTagsFromGuidanceLinks,
+            fixInstructionProcessor,
+            getPropertyConfiguration,
+            UnifiedReportHead,
+        );
+
         const deps: RootContainerRendererDeps = {
             currentWindow,
             userConfigurationStore,
@@ -338,6 +360,12 @@ getPersistedData(indexedDBInstance, indexedDBDataKeysToFetch).then(
             settingsProvider: UnifiedSettingsProvider,
             loadTheme,
             documentManipulator,
+            reportGenerator: new ReportGenerator(
+                new ReportNameGenerator(),
+                reportHtmlGenerator,
+                null,
+            ),
+            fileURLProvider: new FileURLProvider(new WindowUtils(), provideBlob),
         };
 
         window.insightsUserConfiguration = new UserConfigurationController(interpreter);

@@ -6,6 +6,7 @@ import { NamedFC } from 'common/react/named-fc';
 import { allInstanceOutcomeTypes, InstanceOutcomeType } from '../instance-outcome-type';
 import { OutcomeSummaryBar } from '../outcome-summary-bar';
 import { SectionProps } from './report-section-factory';
+import { OutcomeType } from 'reports/components/outcome-type';
 
 export type SummarySectionProps = Pick<SectionProps, 'cardsViewData'>;
 
@@ -20,13 +21,17 @@ export const SummarySection = NamedFC<SummarySectionProps>('SummarySection', pro
         inapplicable: cards.inapplicable.length,
     };
 
+    const outcomeTypes: OutcomeType[] = cards.inapplicable.length
+        ? allInstanceOutcomeTypes
+        : ['pass', 'fail'];
+
     return (
         <div className="summary-section">
             <h2>Summary</h2>
             <OutcomeSummaryBar
                 outcomeStats={countSummary}
                 iconStyleInverted={true}
-                allOutcomeTypes={allInstanceOutcomeTypes}
+                allOutcomeTypes={outcomeTypes}
             />
         </div>
     );
