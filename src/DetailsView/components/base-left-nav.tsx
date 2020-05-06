@@ -1,11 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import { TestRequirementLeftNavLink } from 'DetailsView/components/left-nav/assessment-left-nav';
 import { INavLink, Nav } from 'office-ui-fabric-react';
 import * as React from 'react';
 
 export type onBaseLeftNavItemClick = (
     event: React.MouseEvent<HTMLElement>,
     item: BaseLeftNavLink,
+) => void;
+export type onTestRequirementClick = (
+    event: React.MouseEvent<HTMLElement>,
+    item: TestRequirementLeftNavLink,
 ) => void;
 export type onBaseLeftNavItemRender = (
     link: BaseLeftNavLink,
@@ -45,6 +50,9 @@ export class BaseLeftNav extends React.Component<BaseLeftNavProps> {
                 ]}
                 onRenderLink={this.onRenderLink}
                 onLinkClick={this.onNavLinkClick}
+                styles={{
+                    chevronButton: 'hidden',
+                }}
             />
         );
     }

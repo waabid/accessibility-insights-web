@@ -199,6 +199,7 @@ describe('LeftNavBuilder', () => {
                     })`,
                 };
                 expect(isMatch(actual, expected)).toBeTruthy();
+                expect(actual).toMatchObject(expected);
                 expect(actual.onRenderNavLink(actual, renderIconStub)).toMatchSnapshot();
             });
         });

@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import * as React from 'react';
-
 import { AssessmentsProvider } from 'assessments/types/assessments-provider';
+import { VisualizationType } from 'common/types/visualization-type';
+import * as React from 'react';
 import { NamedFC } from '../../../common/react/named-fc';
 import { ManualTestStatus, ManualTestStatusData } from '../../../common/types/manual-test-status';
 import { DictionaryStringTo } from '../../../types/common-types';
@@ -32,6 +32,11 @@ export type AssessmentLeftNavLink = {
     status: ManualTestStatus;
 } & BaseLeftNavLink;
 
+export type TestRequirementLeftNavLink = {
+    displayedIndex: string;
+    testType: VisualizationType;
+} & AssessmentLeftNavLink;
+
 export const AssessmentLeftNav = NamedFC<AssessmentLeftNavProps>('AssessmentLeftNav', props => {
     const { deps, selectedKey, assessmentsProvider, assessmentsData } = props;
 
@@ -56,12 +61,13 @@ export const AssessmentLeftNav = NamedFC<AssessmentLeftNavProps>('AssessmentLeft
         ),
     );
     links = links.concat(
-        leftNavLinkBuilder.buildAssessmentTestLinks(
+        leftNavLinkBuilder.buildNewAssessmentTestLinks(
             deps,
             navLinkHandler.onAssessmentTestClick,
             assessmentsProvider,
             assessmentsData,
             1,
+            navLinkHandler.onRequirementClick,
         ),
     );
 
