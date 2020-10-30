@@ -35,16 +35,16 @@ import { TestView } from 'electron/views/automated-checks/test-view';
 import { DeviceDisconnectedPopup } from 'electron/views/device-disconnected-popup/device-disconnected-popup';
 import { ContentPanelDeps } from 'electron/views/left-nav/content-panel-deps';
 import { FluentLeftNav } from 'electron/views/left-nav/fluent-left-nav';
-import { LeftNav, LeftNavDeps } from 'electron/views/left-nav/left-nav';
+import { LeftNavDeps } from 'electron/views/left-nav/left-nav';
 import { ScreenshotView } from 'electron/views/screenshot/screenshot-view';
 import { ScreenshotViewModelProvider } from 'electron/views/screenshot/screenshot-view-model-provider';
 import * as React from 'react';
-import * as styles from './automated-checks-view.scss';
 import { CommandBar, CommandBarDeps } from './components/command-bar';
+import * as styles from './main-application-view.scss';
 
-export const automatedChecksViewAutomationId = 'automated-checks-view';
+export const mainApplicationViewAutomationId = 'automated-checks-view';
 
-export type AutomatedChecksViewDeps = CommandBarDeps &
+export type MainApplicationViewDeps = CommandBarDeps &
     TitleBarDeps &
     CardsViewDeps &
     LeftNavDeps &
@@ -60,8 +60,8 @@ export type AutomatedChecksViewDeps = CommandBarDeps &
         getDateFromTimestamp: (timestamp: string) => Date;
     };
 
-export type AutomatedChecksViewProps = {
-    deps: AutomatedChecksViewDeps;
+export type MainApplicationViewProps = {
+    deps: MainApplicationViewDeps;
     scanStoreData: ScanStoreData;
     windowStateStoreData: WindowStateStoreData;
     userConfigurationStoreData: UserConfigurationStoreData;
@@ -74,7 +74,7 @@ export type AutomatedChecksViewProps = {
     narrowModeStatus: NarrowModeStatus;
 };
 
-export class AutomatedChecksView extends React.Component<AutomatedChecksViewProps> {
+export class MainApplicationView extends React.Component<MainApplicationViewProps> {
     public componentDidMount(): void {
         this.props.deps.scanActionCreator.scan(this.getScanPort());
     }
@@ -117,19 +117,19 @@ export class AutomatedChecksView extends React.Component<AutomatedChecksViewProp
 
         return (
             <div
-                className={styles.automatedChecksView}
-                data-automation-id={automatedChecksViewAutomationId}
+                className={styles.mainApplicationView}
+                data-automation-id={mainApplicationViewAutomationId}
             >
                 <TitleBar
                     deps={this.props.deps}
                     pageTitle={contentPageInfo.title}
                     windowStateStoreData={this.props.windowStateStoreData}
                 ></TitleBar>
-                <div className={styles.applicationView}>
+                <div className={styles.applicationViewBody}>
                     {this.getLeftNav()}
-                    <div className={styles.automatedChecksPanelContainer}>
+                    <div className={styles.selectedContentContainer}>
                         {this.renderExpandedCommandBar(cardsViewData, scanMetadata)}
-                        <div className={styles.automatedChecksPanelLayout}>
+                        <div className={styles.selectedContent}>
                             <div className={styles.mainContentWrapper}>
                                 {this.renderOriginalCommandBar(cardsViewData, scanMetadata)}
                                 <main>

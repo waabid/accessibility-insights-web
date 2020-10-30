@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AutomatedChecksView right content panel info changes when left nav selected key changes 1`] = `
+exports[`MainApplicationView right content panel info changes when left nav selected key changes 1`] = `
 <TestView
   cardsViewData={
     Object {
@@ -75,7 +75,7 @@ exports[`AutomatedChecksView right content panel info changes when left nav sele
 />
 `;
 
-exports[`AutomatedChecksView right content panel info renders with default/initial value 1`] = `
+exports[`MainApplicationView right content panel info renders with default/initial value 1`] = `
 <TestView
   cardsViewData={
     Object {
@@ -150,9 +150,9 @@ exports[`AutomatedChecksView right content panel info renders with default/initi
 />
 `;
 
-exports[`AutomatedChecksView when status scan <Completed> 1`] = `
+exports[`MainApplicationView when status scan <Completed> 1`] = `
 <div
-  className="automatedChecksView"
+  className="mainApplicationView"
   data-automation-id="automated-checks-view"
 >
   <TitleBar
@@ -202,7 +202,7 @@ exports[`AutomatedChecksView when status scan <Completed> 1`] = `
     pageTitle="test-automated-checks-title"
   />
   <div
-    className="applicationView"
+    className="applicationViewBody"
   >
     <FlaggedComponent
       enableJSXElement={
@@ -258,7 +258,7 @@ exports[`AutomatedChecksView when status scan <Completed> 1`] = `
       featureFlag="leftNavBar"
     />
     <div
-      className="automatedChecksPanelContainer"
+      className="selectedContentContainer"
     >
       <FlaggedComponent
         disableJSXElement={null}
@@ -346,7 +346,7 @@ exports[`AutomatedChecksView when status scan <Completed> 1`] = `
         featureFlag="leftNavBar"
       />
       <div
-        className="automatedChecksPanelLayout"
+        className="selectedContent"
       >
         <div
           className="mainContentWrapper"
@@ -592,9 +592,9 @@ exports[`AutomatedChecksView when status scan <Completed> 1`] = `
 </div>
 `;
 
-exports[`AutomatedChecksView when status scan <Failed> 1`] = `
+exports[`MainApplicationView when status scan <Failed> 1`] = `
 <div
-  className="automatedChecksView"
+  className="mainApplicationView"
   data-automation-id="automated-checks-view"
 >
   <TitleBar
@@ -644,7 +644,7 @@ exports[`AutomatedChecksView when status scan <Failed> 1`] = `
     pageTitle="test-automated-checks-title"
   />
   <div
-    className="applicationView"
+    className="applicationViewBody"
   >
     <FlaggedComponent
       enableJSXElement={
@@ -700,7 +700,7 @@ exports[`AutomatedChecksView when status scan <Failed> 1`] = `
       featureFlag="leftNavBar"
     />
     <div
-      className="automatedChecksPanelContainer"
+      className="selectedContentContainer"
     >
       <FlaggedComponent
         disableJSXElement={null}
@@ -773,7 +773,7 @@ exports[`AutomatedChecksView when status scan <Failed> 1`] = `
         featureFlag="leftNavBar"
       />
       <div
-        className="automatedChecksPanelLayout"
+        className="selectedContent"
       >
         <div
           className="mainContentWrapper"
@@ -993,9 +993,9 @@ exports[`AutomatedChecksView when status scan <Failed> 1`] = `
 </div>
 `;
 
-exports[`AutomatedChecksView when status scan <Scanning> 1`] = `
+exports[`MainApplicationView when status scan <Scanning> 1`] = `
 <div
-  className="automatedChecksView"
+  className="mainApplicationView"
   data-automation-id="automated-checks-view"
 >
   <TitleBar
@@ -1045,7 +1045,7 @@ exports[`AutomatedChecksView when status scan <Scanning> 1`] = `
     pageTitle="test-automated-checks-title"
   />
   <div
-    className="applicationView"
+    className="applicationViewBody"
   >
     <FlaggedComponent
       enableJSXElement={
@@ -1101,7 +1101,7 @@ exports[`AutomatedChecksView when status scan <Scanning> 1`] = `
       featureFlag="leftNavBar"
     />
     <div
-      className="automatedChecksPanelContainer"
+      className="selectedContentContainer"
     >
       <FlaggedComponent
         disableJSXElement={null}
@@ -1174,7 +1174,7 @@ exports[`AutomatedChecksView when status scan <Scanning> 1`] = `
         featureFlag="leftNavBar"
       />
       <div
-        className="automatedChecksPanelLayout"
+        className="selectedContent"
       >
         <div
           className="mainContentWrapper"
@@ -1390,9 +1390,9 @@ exports[`AutomatedChecksView when status scan <Scanning> 1`] = `
 </div>
 `;
 
-exports[`AutomatedChecksView when status scan <undefined> 1`] = `
+exports[`MainApplicationView when status scan <undefined> 1`] = `
 <div
-  className="automatedChecksView"
+  className="mainApplicationView"
   data-automation-id="automated-checks-view"
 >
   <TitleBar
@@ -1442,7 +1442,7 @@ exports[`AutomatedChecksView when status scan <undefined> 1`] = `
     pageTitle="test-automated-checks-title"
   />
   <div
-    className="applicationView"
+    className="applicationViewBody"
   >
     <FlaggedComponent
       enableJSXElement={
@@ -1498,7 +1498,7 @@ exports[`AutomatedChecksView when status scan <undefined> 1`] = `
       featureFlag="leftNavBar"
     />
     <div
-      className="automatedChecksPanelContainer"
+      className="selectedContentContainer"
     >
       <FlaggedComponent
         disableJSXElement={null}
@@ -1571,7 +1571,7 @@ exports[`AutomatedChecksView when status scan <undefined> 1`] = `
         featureFlag="leftNavBar"
       />
       <div
-        className="automatedChecksPanelLayout"
+        className="selectedContent"
       >
         <div
           className="mainContentWrapper"

@@ -7,7 +7,7 @@
     .settings-panel-layer-host {
         top: $mac-title-height !important;
     }
-    .application-view {
+    .application-view-body {
         height: calc(100% - (#{$mac-title-height}));
     }
 }
@@ -15,12 +15,12 @@
     top: $default-title-height !important;
 }
 
-.application-view {
+.application-view-body {
     display: flex;
     height: calc(100% - (#{$default-title-height}));
 }
 
-.automated-checks-view {
+.main-application-view {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -29,13 +29,13 @@
     -webkit-app-region: no-drag;
     background-color: $neutral-2;
 
-    .automated-checks-panel-container {
+    .selected-content-container {
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
 
-    .automated-checks-panel-layout {
+    .selected-content {
         display: flex;
         flex-grow: 1;
         overflow: hidden;

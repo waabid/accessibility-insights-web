@@ -6,20 +6,20 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { createApplication } from 'tests/electron/common/create-application';
 import {
-    AutomatedChecksViewSelectors,
+    MainApplicationViewSelectors,
     ScreenshotViewSelectors,
-} from 'tests/electron/common/element-identifiers/automated-checks-view-selectors';
+} from 'tests/electron/common/element-identifiers/main-application-view-selectors';
 import { scanForAccessibilityIssuesInAllModes } from 'tests/electron/common/scan-for-accessibility-issues';
 import { AppController } from 'tests/electron/common/view-controllers/app-controller';
-import { AutomatedChecksViewController } from 'tests/electron/common/view-controllers/automated-checks-view-controller';
+import { MainApplicationViewController } from 'tests/electron/common/view-controllers/main-application-view-controller';
 import { commonAdbConfigs, setupMockAdb } from 'tests/miscellaneous/mock-adb/setup-mock-adb';
 import { testResourceServerConfig } from '../setup/test-resource-server-config';
 import { androidTestConfigs } from 'electron/platform/android/test-configs/android-test-configs';
 import { RawResult } from 'webdriverio';
 
-describe('AutomatedChecksView', () => {
+describe('MainApplicationView', () => {
     let app: AppController;
-    let automatedChecksView: AutomatedChecksViewController;
+    let mainApplicationView: MainApplicationViewController;
     const narrowModeThresholds = getNarrowModeThresholdsForUnified();
     const height = 400;
 
@@ -30,8 +30,8 @@ describe('AutomatedChecksView', () => {
             'beforeEach',
         );
         app = await createApplication({ suppressFirstTimeDialog: true });
-        automatedChecksView = await app.openAutomatedChecksView();
-        await automatedChecksView.waitForScreenshotViewVisible();
+        mainApplicationView = await app.openMainApplicationView();
+        await mainApplicationView.waitForScreenshotViewVisible();
     });
 
     afterEach(async () => {
@@ -45,36 +45,36 @@ describe('AutomatedChecksView', () => {
     });
 
     it('displays automated checks results collapsed by default', async () => {
-        automatedChecksView.waitForRuleGroupCount(3);
+        mainApplicationView.waitForRuleGroupCount(3);
 
-        const collapsibleContentElements = await automatedChecksView.queryRuleGroupContents();
+        const collapsibleContentElements = await mainApplicationView.queryRuleGroupContents();
         expect(collapsibleContentElements).toHaveLength(0);
     });
 
     it('supports expanding and collapsing rule groups', async () => {
-        await automatedChecksView.waitForHighlightBoxCount(4);
-        expect(await automatedChecksView.queryRuleGroupContents()).toHaveLength(0);
+        await mainApplicationView.waitForHighlightBoxCount(4);
+        expect(await mainApplicationView.queryRuleGroupContents()).toHaveLength(0);
 
-        await automatedChecksView.toggleRuleGroupAtPosition(1);
+        await mainApplicationView.toggleRuleGroupAtPosition(1);
         await assertExpandedRuleGroup(1, 'ImageViewName', 1);
 
-        await automatedChecksView.toggleRuleGroupAtPosition(2);
+        await mainApplicationView.toggleRuleGroupAtPosition(2);
         await assertExpandedRuleGroup(2, 'ActiveViewName', 2);
 
-        await automatedChecksView.toggleRuleGroupAtPosition(3);
+        await mainApplicationView.toggleRuleGroupAtPosition(3);
         await assertExpandedRuleGroup(3, 'TouchSizeWcag', 1);
 
-        await automatedChecksView.waitForHighlightBoxCount(4);
-        expect(await automatedChecksView.queryRuleGroupContents()).toHaveLength(3);
+        await mainApplicationView.waitForHighlightBoxCount(4);
+        expect(await mainApplicationView.queryRuleGroupContents()).toHaveLength(3);
 
-        await automatedChecksView.toggleRuleGroupAtPosition(1);
+        await mainApplicationView.toggleRuleGroupAtPosition(1);
         await assertCollapsedRuleGroup(1, 'ImageViewName');
 
-        await automatedChecksView.toggleRuleGroupAtPosition(2);
+        await mainApplicationView.toggleRuleGroupAtPosition(2);
         await assertCollapsedRuleGroup(2, 'ActiveViewName');
 
-        await automatedChecksView.waitForHighlightBoxCount(1);
-        expect(await automatedChecksView.queryRuleGroupContents()).toHaveLength(1);
+        await mainApplicationView.waitForHighlightBoxCount(1);
+        expect(await mainApplicationView.queryRuleGroupContents()).toHaveLength(1);
         await assertExpandedRuleGroup(3, 'TouchSizeWcag', 1);
     });
 
@@ -84,7 +84,7 @@ describe('AutomatedChecksView', () => {
             height,
         );
         await app.setFeatureFlag(UnifiedFeatureFlags.leftNavBar, true);
-        await automatedChecksView.waitForSelector(AutomatedChecksViewSelectors.leftNav);
+        await mainApplicationView.waitForSelector(MainApplicationViewSelectors.leftNav);
         await scanForAccessibilityIssuesInAllModes(app);
     });
 
@@ -96,11 +96,11 @@ describe('AutomatedChecksView', () => {
             height,
         );
         await app.setFeatureFlag(UnifiedFeatureFlags.leftNavBar, true);
-        await automatedChecksView.waitForSelector(AutomatedChecksViewSelectors.leftNav);
-        await automatedChecksView.client.click(
-            AutomatedChecksViewSelectors.nthTestInLeftNav(testIndex + 1),
+        await mainApplicationView.waitForSelector(MainApplicationViewSelectors.leftNav);
+        await mainApplicationView.client.click(
+            MainApplicationViewSelectors.nthTestInLeftNav(testIndex + 1),
         );
-        const title = await automatedChecksView.client.getText('h1');
+        const title = await mainApplicationView.client.getText('h1');
         expect(title).toEqual(expectedTestTitle);
     });
 
@@ -113,13 +113,13 @@ describe('AutomatedChecksView', () => {
         expectedTitle: string,
         expectedFailures: number,
     ): Promise<void> {
-        const title = await automatedChecksView.client.getText(
-            AutomatedChecksViewSelectors.nthRuleGroupTitle(position),
+        const title = await mainApplicationView.client.getText(
+            MainApplicationViewSelectors.nthRuleGroupTitle(position),
         );
         expect(title).toEqual(expectedTitle);
 
-        const failures = await automatedChecksView.client.$$(
-            AutomatedChecksViewSelectors.nthRuleGroupInstances(position),
+        const failures = await mainApplicationView.client.$$(
+            MainApplicationViewSelectors.nthRuleGroupInstances(position),
         );
         expect(failures).toHaveLength(expectedFailures);
     }
@@ -128,13 +128,13 @@ describe('AutomatedChecksView', () => {
         position: number,
         expectedTitle: string,
     ): Promise<void> {
-        const title = await automatedChecksView.client.getText(
-            AutomatedChecksViewSelectors.nthRuleGroupTitle(position),
+        const title = await mainApplicationView.client.getText(
+            MainApplicationViewSelectors.nthRuleGroupTitle(position),
         );
         expect(title).toEqual(expectedTitle);
 
-        const failures = await automatedChecksView.client.$$(
-            AutomatedChecksViewSelectors.nthRuleGroupInstances(position),
+        const failures = await mainApplicationView.client.$$(
+            MainApplicationViewSelectors.nthRuleGroupInstances(position),
         );
         expect(failures).toHaveLength(0);
     }
@@ -151,7 +151,7 @@ describe('AutomatedChecksView', () => {
         const expectedScreenshotImage =
             'data:image/png;base64,' + axeRuleResultExample.axeContext.screenshot;
 
-        const actualScreenshotImage = await automatedChecksView.client.getAttribute<string>(
+        const actualScreenshotImage = await mainApplicationView.client.getAttribute<string>(
             ScreenshotViewSelectors.screenshotImage,
             'src',
         );
@@ -159,9 +159,9 @@ describe('AutomatedChecksView', () => {
     });
 
     it('ScreenshotView renders expected number/size of highlight boxes in expected positions', async () => {
-        await automatedChecksView.waitForScreenshotViewVisible();
+        await mainApplicationView.waitForScreenshotViewVisible();
 
-        const styles = await automatedChecksView.client.getAttribute<string[]>(
+        const styles = await mainApplicationView.client.getAttribute<string[]>(
             ScreenshotViewSelectors.highlightBox,
             'style',
         );
@@ -221,7 +221,7 @@ describe('AutomatedChecksView', () => {
 
         // Note: the following call returns a different type of object than is specified
         // by the typescript return type when the element is found
-        return automatedChecksView.client.$(AutomatedChecksViewSelectors.leftNavHamburgerButton);
+        return mainApplicationView.client.$(MainApplicationViewSelectors.leftNavHamburgerButton);
     };
 
     it('command bar reflows when narrow mode threshold is crossed', async () => {
@@ -235,14 +235,14 @@ describe('AutomatedChecksView', () => {
     });
 
     const waitForFluentLeftNavToDisappear = async (): Promise<void> => {
-        return automatedChecksView.waitForSelectorToDisappear(
-            AutomatedChecksViewSelectors.fluentLeftNav,
+        return mainApplicationView.waitForSelectorToDisappear(
+            MainApplicationViewSelectors.fluentLeftNav,
         );
     };
 
     const expectFluentLeftNavNotToBeRendered = async (): Promise<void> => {
-        const result = await automatedChecksView.client.$(
-            AutomatedChecksViewSelectors.fluentLeftNav,
+        const result = await mainApplicationView.client.$(
+            MainApplicationViewSelectors.fluentLeftNav,
         );
         expect(result.state).toBe('failure');
     };
@@ -250,23 +250,23 @@ describe('AutomatedChecksView', () => {
     it('hamburger button click opens and closes left nav', async () => {
         await setupWindowForCommandBarReflowTest(2);
         await expectFluentLeftNavNotToBeRendered();
-        await automatedChecksView.client.click(AutomatedChecksViewSelectors.leftNavHamburgerButton);
-        await automatedChecksView.waitForSelector(AutomatedChecksViewSelectors.fluentLeftNav);
+        await mainApplicationView.client.click(MainApplicationViewSelectors.leftNavHamburgerButton);
+        await mainApplicationView.waitForSelector(MainApplicationViewSelectors.fluentLeftNav);
 
         // Clicks the hamburger button inside the fluent left nav (there is one within the command bar as well)
-        const selector = `${AutomatedChecksViewSelectors.fluentLeftNav} ${AutomatedChecksViewSelectors.leftNavHamburgerButton}`;
-        await automatedChecksView.client.click(selector);
+        const selector = `${MainApplicationViewSelectors.fluentLeftNav} ${MainApplicationViewSelectors.leftNavHamburgerButton}`;
+        await mainApplicationView.client.click(selector);
         await waitForFluentLeftNavToDisappear();
         await expectFluentLeftNavNotToBeRendered();
     });
 
     it('left nav closes when item is selected', async () => {
         await setupWindowForCommandBarReflowTest(2);
-        await automatedChecksView.client.click(AutomatedChecksViewSelectors.leftNavHamburgerButton);
-        await automatedChecksView.waitForSelector(AutomatedChecksViewSelectors.fluentLeftNav);
+        await mainApplicationView.client.click(MainApplicationViewSelectors.leftNavHamburgerButton);
+        await mainApplicationView.waitForSelector(MainApplicationViewSelectors.fluentLeftNav);
 
-        const selector = `${AutomatedChecksViewSelectors.fluentLeftNav} a`;
-        await automatedChecksView.client.click(selector);
+        const selector = `${MainApplicationViewSelectors.fluentLeftNav} a`;
+        await mainApplicationView.client.click(selector);
         await waitForFluentLeftNavToDisappear();
         await expectFluentLeftNavNotToBeRendered();
     });

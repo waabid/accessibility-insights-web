@@ -3,18 +3,18 @@
 import { SpectronAsyncClient } from 'tests/electron/common/view-controllers/spectron-async-client';
 import { settingsPanelSelectors } from 'tests/end-to-end/common/element-identifiers/details-view-selectors';
 import {
-    AutomatedChecksViewSelectors,
+    MainApplicationViewSelectors,
     ScreenshotViewSelectors,
-} from '../element-identifiers/automated-checks-view-selectors';
+} from '../element-identifiers/main-application-view-selectors';
 import { ViewController } from './view-controller';
 
-export class AutomatedChecksViewController extends ViewController {
+export class MainApplicationViewController extends ViewController {
     constructor(client: SpectronAsyncClient) {
         super(client);
     }
 
     public async waitForRuleGroupCount(count: number): Promise<void> {
-        await this.waitForNumberOfSelectorMatches(AutomatedChecksViewSelectors.ruleGroup, count);
+        await this.waitForNumberOfSelectorMatches(MainApplicationViewSelectors.ruleGroup, count);
     }
 
     public async waitForHighlightBoxCount(count: number): Promise<void> {
@@ -22,17 +22,17 @@ export class AutomatedChecksViewController extends ViewController {
     }
 
     public async queryRuleGroupContents(): Promise<any[]> {
-        return this.client.$$(AutomatedChecksViewSelectors.ruleContent);
+        return this.client.$$(MainApplicationViewSelectors.ruleContent);
     }
 
     public async toggleRuleGroupAtPosition(position: number): Promise<void> {
-        const selector = AutomatedChecksViewSelectors.nthRuleGroupCollapseExpandButton(position);
+        const selector = MainApplicationViewSelectors.nthRuleGroupCollapseExpandButton(position);
         await this.waitForSelector(selector);
         await this.client.click(selector);
     }
 
     public async waitForViewVisible(): Promise<void> {
-        await this.waitForSelector(AutomatedChecksViewSelectors.mainContainer);
+        await this.waitForSelector(MainApplicationViewSelectors.mainContainer);
     }
 
     public async waitForScreenshotViewVisible(): Promise<void> {
@@ -40,8 +40,8 @@ export class AutomatedChecksViewController extends ViewController {
     }
 
     public async openSettingsPanel(): Promise<void> {
-        await this.waitForSelector(AutomatedChecksViewSelectors.settingsButton);
-        await this.click(AutomatedChecksViewSelectors.settingsButton);
+        await this.waitForSelector(MainApplicationViewSelectors.settingsButton);
+        await this.click(MainApplicationViewSelectors.settingsButton);
         await this.waitForSelector(settingsPanelSelectors.settingsPanel);
         await this.waitForMilliseconds(750); // Allow for fabric's panel animation to settle
     }

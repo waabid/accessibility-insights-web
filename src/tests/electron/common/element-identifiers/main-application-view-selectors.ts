@@ -6,7 +6,7 @@ import { ruleContentAutomationId } from 'common/components/cards/instance-detail
 import { ruleGroupAutomationId } from 'common/components/cards/rules-with-instances';
 import { leftNavHamburgerButtonAutomationId } from 'common/components/left-nav-hamburger-button';
 import { testViewLeftNavLinkAutomationId } from 'DetailsView/components/left-nav/test-view-left-nav-link';
-import { automatedChecksViewAutomationId } from 'electron/views/automated-checks/automated-checks-view';
+import { mainApplicationViewAutomationId } from 'electron/views/automated-checks/main-application-view';
 import { commandButtonSettingsId } from 'electron/views/automated-checks/components/command-bar';
 import { fluentLeftNavAutomationId } from 'electron/views/left-nav/fluent-left-nav';
 import { leftNavAutomationId } from 'electron/views/left-nav/left-nav';
@@ -16,10 +16,10 @@ import { screenshotViewAutomationId } from 'electron/views/screenshot/screenshot
 import { cardsRuleIdAutomationId } from 'reports/components/report-sections/minimal-rule-header';
 import { getAutomationIdSelector } from 'tests/common/get-automation-id-selector';
 
-const nthRuleGroup = (n: number) => `${AutomatedChecksViewSelectors.ruleGroup}:nth-of-type(${n})`;
+const nthRuleGroup = (n: number) => `${MainApplicationViewSelectors.ruleGroup}:nth-of-type(${n})`;
 
-export const AutomatedChecksViewSelectors = {
-    mainContainer: getAutomationIdSelector(automatedChecksViewAutomationId),
+export const MainApplicationViewSelectors = {
+    mainContainer: getAutomationIdSelector(mainApplicationViewAutomationId),
     ruleGroup: getAutomationIdSelector(ruleGroupAutomationId),
     ruleContent: getAutomationIdSelector(ruleContentAutomationId),
     leftNav: getAutomationIdSelector(leftNavAutomationId),

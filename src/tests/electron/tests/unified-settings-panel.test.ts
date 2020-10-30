@@ -4,13 +4,13 @@ import * as path from 'path';
 import { createApplication } from 'tests/electron/common/create-application';
 import { scanForAccessibilityIssuesInAllModes } from 'tests/electron/common/scan-for-accessibility-issues';
 import { AppController } from 'tests/electron/common/view-controllers/app-controller';
-import { AutomatedChecksViewController } from 'tests/electron/common/view-controllers/automated-checks-view-controller';
+import { MainApplicationViewController } from 'tests/electron/common/view-controllers/main-application-view-controller';
 import { CommonSelectors } from 'tests/end-to-end/common/element-identifiers/common-selectors';
 import { settingsPanelSelectors } from 'tests/end-to-end/common/element-identifiers/details-view-selectors';
 import { commonAdbConfigs, setupMockAdb } from 'tests/miscellaneous/mock-adb/setup-mock-adb';
-describe('AutomatedChecksView -> Settings Panel', () => {
+describe('MainApplicationView -> Settings Panel', () => {
     let app: AppController;
-    let automatedChecksView: AutomatedChecksViewController;
+    let mainApplicationView: MainApplicationViewController;
 
     beforeEach(async () => {
         await setupMockAdb(
@@ -19,9 +19,9 @@ describe('AutomatedChecksView -> Settings Panel', () => {
             'beforeEach',
         );
         app = await createApplication({ suppressFirstTimeDialog: true });
-        automatedChecksView = await app.openAutomatedChecksView();
-        await automatedChecksView.waitForViewVisible();
-        await automatedChecksView.openSettingsPanel();
+        mainApplicationView = await app.openMainApplicationView();
+        await mainApplicationView.waitForViewVisible();
+        await mainApplicationView.openSettingsPanel();
     });
 
     afterEach(async () => {
@@ -32,7 +32,7 @@ describe('AutomatedChecksView -> Settings Panel', () => {
 
     describe('Telemetry toggle', () => {
         it('should be "off" as per our suppressFirstTimeDialog implementation of the initial state', async () => {
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.telemetryStateToggle,
                 false,
             );
@@ -40,13 +40,13 @@ describe('AutomatedChecksView -> Settings Panel', () => {
 
         it('should reflect the state applied via the insightsUserConfiguration controller', async () => {
             await app.setTelemetryState(true);
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.telemetryStateToggle,
                 true,
             );
 
             await app.setTelemetryState(false);
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.telemetryStateToggle,
                 false,
             );
@@ -59,39 +59,39 @@ describe('AutomatedChecksView -> Settings Panel', () => {
         it.skip('should default to system setting or non-high-contrast mode', async () => {
             const highContrastModeEnabled = false;
 
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.highContrastModeToggle,
                 highContrastModeEnabled,
             );
         });
 
         it('should apply the appropriate CSS style when High Contrast Mode setting is toggled', async () => {
-            await automatedChecksView.setToggleState(
+            await mainApplicationView.setToggleState(
                 settingsPanelSelectors.highContrastModeToggle,
                 true,
             );
 
-            await automatedChecksView.waitForSelector(CommonSelectors.highContrastThemeSelector);
+            await mainApplicationView.waitForSelector(CommonSelectors.highContrastThemeSelector);
 
-            await automatedChecksView.setToggleState(
+            await mainApplicationView.setToggleState(
                 settingsPanelSelectors.highContrastModeToggle,
                 false,
             );
 
-            await automatedChecksView.waitForSelectorToDisappear(
+            await mainApplicationView.waitForSelectorToDisappear(
                 CommonSelectors.highContrastThemeSelector,
             );
         });
 
         it('should reflect the state applied via the insightsUserConfiguration controller', async () => {
             await app.setHighContrastMode(true);
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.highContrastModeToggle,
                 true,
             );
 
             await app.setHighContrastMode(false);
-            await automatedChecksView.expectToggleState(
+            await mainApplicationView.expectToggleState(
                 settingsPanelSelectors.highContrastModeToggle,
                 false,
             );
